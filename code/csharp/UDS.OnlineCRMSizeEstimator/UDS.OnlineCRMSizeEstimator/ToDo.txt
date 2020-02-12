@@ -1,0 +1,5 @@
+﻿Method 8: Delete bulk import instances using a bulk deletion job
+Method 9: Delete bulk deletion job instances using a bulk deletion job
+Method 10: Delete audit logs
+Method 2: Evaluate and delete suspended workflows
+Method 1: Delete bulk email and workflow instances using a bulk deletion job

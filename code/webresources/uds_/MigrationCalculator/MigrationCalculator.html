@@ -1,0 +1,67 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Migration Calculator from UDS</title>
+
+    <link href="MigrationCalculator.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300&amp;display=swap" rel="stylesheet">
+
+    <script type="text/javascript" src="../../ClientGlobalContext.js.aspx"></script>
+    <script type="text/javascript" src="MigrationCalculator.js"></script>
+    <meta>
+    <meta>
+</head>
+
+<body style="overflow-wrap: break-word;">
+    <h1 class="title">
+        Migration Calculator
+    </h1>
+    <button id="run-button" onclick="UDS.MigrationCalculator.Form.OnLoad()">Run Investigation</button>
+    <div id="information">
+        <h3>During investigation addon will calculate highlighted information about your system (<a
+                onclick="UDS.MigrationCalculator.Form.ToggleListInformation()" href="#">Click here for
+                details</a>) and send it to our server to estimate cost of Migration in real time.</h3>
+        <div id="list-info" style="display: none">
+            <ul style="margin-right: 20px">
+                <li>CRM address</li>
+                <li>Number of standard and custom entities</li>
+                <li>Number of custom fields</li>
+                <li>Number of custom workflows</li>
+                <li>Number of active users</li>
+                <li>Number of reports</li>
+            </ul>
+            <ul>
+                <li>CRM version</li>
+                <li>Number of custom plugin assemblies</li>
+                <li>Number of custom plug-ins</li>
+                <li>Number of custom workflows</li>
+                <li>Number of custom web resources</li>
+                <li>Entity names and amount of records</li>
+            </ul>
+        </div>
+        <h3>Additional info and explanation video <a href="https://uds.systems/add-ons/migration-calculator" target="_blank">here.</a></h3>
+    </div>
+    <div>
+        <h2 id="statusTitle"></h2>
+        <h3 id="statusText"></h3>
+        <h3 id="statusHint"></h3>
+    </div>
+    <div>
+        <div id="loader"></div>
+    </div>
+    <div id="contact-info">
+        <h3 id="calculation">Calculation may take 1-20 mins (depends on your Organization size)</h3>
+        <h3 class="contacts">Email: <a href="mailto:info@uds.systems">info@uds.systems</a><span class="spacer"></span>Skype: <a href="skype:uds.systems?call">uds.systems</a><span class="spacer"></span>Site: <a href="https://uds.systems" target="_blank">https://uds.systems</a></h3>
+    </div>
+    <div id="powerdBy">
+        <h3>
+            <span>Powered by <a href="https://uds.systems/" target="_blank"><img src="logo.png"
+                        alt="UDS logo"></a></span>
+        </h3>
+    </div>
+
+
+</body>
+
+</html>

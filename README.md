@@ -9,6 +9,6 @@ UDS Storage Analyzer designed to:
 
 ## How to install & uninstall
 
-Click here to download UDS Storage Analyzer Installation guide. After installing UDS Storage Analyzer solution is fully ready to work.
+Click here to download [UDS Storage Analyzer Installation guide ](https://raw.githubusercontent.com/RomanSavran/UDS-Storage-Analyzer/master/docs/installation-guide.pdf). After installing UDS Storage Analyzer solution is fully ready to work.
 
 **IMPORTANT: UDS Storage Analyzer calculates roughly equal values of size (+/- 10%)**
