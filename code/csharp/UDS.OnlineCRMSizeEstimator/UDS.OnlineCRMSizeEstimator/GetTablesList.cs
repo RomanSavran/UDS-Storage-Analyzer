@@ -29,7 +29,10 @@ namespace UDS.OnlineCRMSizeEstimator
             // Retrieve the MetaData.
             RetrieveAllEntitiesResponse response = (RetrieveAllEntitiesResponse)service.Execute(request);
 
-            context.OutputParameters["Tables"] = JsonSerializer.Serialize<List<string>>(response.EntityMetadata.Where(x => x.IsCustomizable.Value).Select(x => x.LogicalName).OrderBy(x => x).ToList());
+            context.OutputParameters["Tables"] = JsonSerializer.Serialize<List<string>>(response.EntityMetadata
+                .Where(x => x.IsCustomizable.Value)
+                .Select(x => x.LogicalName)
+                .OrderBy(x => x).ToList());
         }
     }
 }
