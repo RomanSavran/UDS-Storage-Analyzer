@@ -1,0 +1,10 @@
+body {
+    display: block !important;
+}
+body table {
+    margin-top: 20px;
+}
+body table thead {
+    background-color: #999;
+    font-size: 16px;
+}

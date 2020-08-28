@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru" ng-app="tableApp">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Content">
+    <meta name="description" content="Content">
+    <meta name="author" content="Абрамов Максим">
+    <title>Table size Calculator</title>
+    <script src="/WebResources/uds_/tablesizecalculator/vendor.js" type="text/javascript"></script>
+    <script src="/WebResources/uds_/tablesizecalculator/ngDialog.js" type="text/javascript"></script>
+    <script src="/WebResources/uds_/tablesizecalculator/uiBootstrapTpls2.0.0.min.js" type="text/javascript"></script>
+    <script src="/WebResources/uds_/tablesizecalculator/angularAnimate.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/WebResources/uds_/tablesizecalculator/vendor.min.css">
+    <link rel="stylesheet" href="/WebResources/uds_/tablesizecalculator/style.css">
+    <link rel="stylesheet" href="/WebResources/uds_/tablesizecalculator/ngDialog.css">
+    <link rel="stylesheet" href="/WebResources/uds_/tablesizecalculator/ngDialogThemeDefault.css">
+    <script src="/WebResources/mag_/js/process.js" type="text/javascript"></script>
+    <script src="/WebResources/uds_/tablesizecalculator/tableCtrl.js" type="text/javascript"></script>
+</head>
+<body style="word-wrap: break-word;">
+<div class="container" ng-controller="tableCtrl">
+    <div class="row">
+        <div class="col-md-12">
+            <div ng-show="dynamicValueOfProgressBar < 100">
+                <uib-progressbar max="maxValueOfProgressBar" value="dynamicValueOfProgressBar"
+                                 ng-init="dynamicValueOfProgressBar=0"><span style="color:white; white-space:nowrap;">{{dynamicValueOfProgressBar | number:0}} / {{maxValueOfProgressBar}} %</span>
+                </uib-progressbar>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                    <tr>
+                        <th>System Name</th>
+                        <th>Name</th>
+                        <th>Count</th>
+                        <th>Size(KB)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="row in dataTables | orderBy:'-sizeOrder':true">
+                        <td>{{ row.systemName }}</td>
+                        <td>
+                            <span ng-if="row.isLoading">
+                                <img src="/webresources/uds_/tablesizecalculator/icon.gif" alt="icon">
+                                <span ng-if="row.isError"> - </span>
+                              </span>
+                            {{ row.displayName }}
+                        </td>
+                        <td>
+                              <span ng-if="row.isLoading">
+                                <img src="/webresources/uds_/tablesizecalculator/icon.gif" alt="icon">
+                                  <span ng-if="row.isError"> - </span>
+                              </span>
+                            {{ row.count }}
+                        </td>
+                        <td>
+                            <span ng-if="row.isLoading">
+                                <img src="/webresources/uds_/tablesizecalculator/icon.gif" alt="icon">
+                                <span ng-if="row.isError"> - </span>
+                            </span>{{ row.size }}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
