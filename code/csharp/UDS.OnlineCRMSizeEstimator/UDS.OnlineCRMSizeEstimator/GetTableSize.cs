@@ -5,6 +5,7 @@ using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -14,6 +15,11 @@ namespace UDS.OnlineCRMSizeEstimator
 {
     public class GetTableSize : IPlugin
     {
+        private static int[] _errorCodes = new[]
+        {
+            -2147219456, -2147220967, -2147219456
+        };
+
         public void Execute(IServiceProvider serviceProvider)
         {
             var context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
@@ -38,19 +44,20 @@ namespace UDS.OnlineCRMSizeEstimator
             {
                 EntityFilters = EntityFilters.Attributes | EntityFilters.Entity,
                 LogicalName = tableName,
-                RetrieveAsIfPublished = true                           
+                RetrieveAsIfPublished = true
             };
 
             RetrieveEntityResponse response = (RetrieveEntityResponse)service.Execute(request);
 
             int booleanColumns = 0;
             int rowSize = 0;
+            long variableMaxLength = 0;
+
             string tableDisplayName = String.Empty;
             List<string> variableWidth = new List<string>();
 
             foreach (var attribute in response.EntityMetadata.Attributes)
             {
-
                 switch (attribute.AttributeType.Value)
                 {
                     case AttributeTypeCode.Boolean:
@@ -92,7 +99,19 @@ namespace UDS.OnlineCRMSizeEstimator
                     case AttributeTypeCode.String:
                     case AttributeTypeCode.Memo:
                         if (attribute.IsRetrievable == true || attribute.SchemaName.ToLower() == "documentbody" || attribute.SchemaName.ToLower() == "body")
+                        {
                             variableWidth.Add(attribute.LogicalName);
+
+                            switch (attribute)
+                            {
+                                case StringAttributeMetadata sa:
+                                    variableMaxLength += sa.MaxLength ?? 0;
+                                    break;
+                                case MemoAttributeMetadata ma:
+                                    variableMaxLength += ma.MaxLength ?? 0;
+                                    break;
+                            }
+                        }
                         break;
                     case AttributeTypeCode.PartyList:
                     case AttributeTypeCode.CalendarRules:
@@ -105,12 +124,18 @@ namespace UDS.OnlineCRMSizeEstimator
                 }
             }
 
+            int pageSize = 5000, minSize = 1000, maxSize = 5000;
+            if (variableMaxLength > minSize && variableMaxLength < maxSize)
+                pageSize = Convert.ToInt32(Math.Round(5000m / (variableMaxLength / 100), 0));
+            else if (variableMaxLength > maxSize)
+                pageSize = 25;
+
             var requestEntities = new QueryExpression(tableName)
             {
                 ColumnSet = new ColumnSet(variableWidth.ToArray()),
                 PageInfo = new PagingInfo()
                 {
-                    Count = 10,
+                    Count = pageSize,
                     PageNumber = page
                 }
             };
@@ -120,7 +145,17 @@ namespace UDS.OnlineCRMSizeEstimator
                 requestEntities.PageInfo.PagingCookie = (string)context.InputParameters["PagingCoockieIn"];
             }
 
-            var entities = service.RetrieveMultiple(requestEntities);
+            EntityCollection entities = new EntityCollection();
+
+            try
+            {
+                entities = service.RetrieveMultiple(requestEntities);
+            }
+            catch (FaultException<OrganizationServiceFault> e)
+            {
+                if (!_errorCodes.Contains(e.Detail.ErrorCode))
+                    throw e;
+            }
 
             int charSize = 0;
 
@@ -139,7 +174,7 @@ namespace UDS.OnlineCRMSizeEstimator
 
             rowSize += 1 + (booleanColumns - 1) / 8;
 
-            int TotalSize = ((rowSize * entities.Entities.Count + charSize) / 1024 / 8 + 1) * 8;
+            int TotalSize = ((rowSize * entities.Entities.Count + charSize) / 1024);
 
             if (response.EntityMetadata.DisplayName != null && response.EntityMetadata.DisplayName.UserLocalizedLabel != null)
             {
