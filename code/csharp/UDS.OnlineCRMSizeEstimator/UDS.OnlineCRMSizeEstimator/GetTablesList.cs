@@ -3,12 +3,7 @@ using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Json;
-using System.Text;
-using System.Threading.Tasks;
-using UDS.OnlineCRMSizeEstimator.Model;
 
 namespace UDS.OnlineCRMSizeEstimator
 {
@@ -30,7 +25,7 @@ namespace UDS.OnlineCRMSizeEstimator
             RetrieveAllEntitiesResponse response = (RetrieveAllEntitiesResponse)service.Execute(request);
 
             context.OutputParameters["Tables"] = JsonSerializer.Serialize<List<string>>(response.EntityMetadata
-                .Where(x => x.IsCustomizable.Value)
+                .Where(x => x.IsCustomizable.Value && !x.IsEntityHasDataSource())
                 .Select(x => x.LogicalName)
                 .OrderBy(x => x).ToList());
         }
