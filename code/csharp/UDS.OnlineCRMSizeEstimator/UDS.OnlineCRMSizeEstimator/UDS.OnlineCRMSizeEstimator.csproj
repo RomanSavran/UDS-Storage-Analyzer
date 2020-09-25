@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
     <Compile Include="GetTableSize.cs" />
     <Compile Include="GetTablesList.cs" />
     <Compile Include="JsonSerializer.cs" />
